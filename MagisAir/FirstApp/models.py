@@ -1,14 +1,20 @@
 from django.db import models
-
+from datetime import datetime
 
 class City(models.Model):
     city_name = models.CharField(max_length=255)
-    longitude = models.IntegerField
-    latitude = models.IntegerField
+    longitude = models.FloatField()
+    latitude = models.FloatField()
+
+    def __str__(self):
+        return self.city_name
+    
+    class Meta:
+        verbose_name_plural = 'Cities'
 
 
 class Route(models.Model):
-    duration = models.DurationField
+    duration = models.DurationField()
     origin = models.ForeignKey(
         City,
         on_delete=models.CASCADE,
@@ -20,20 +26,29 @@ class Route(models.Model):
         related_name='arrivals'
     )
 
+    def __str__(self):
+        return self.origin.__str__() +"-"+ self.destination.__str__()
+
 
 class Flight(models.Model):
-    departure = models.DateTimeField
-    arrival = models.DateTimeField
-    flight_date = models.DateField
-    flight_cost = models.IntegerField
+    departure = models.DateTimeField(default=datetime.now)
+    arrival = models.DateTimeField(default=datetime.now)
+    flight_date = models.DateField(default=datetime.now)
+    flight_cost = models.IntegerField()
     route = models.ForeignKey(
         Route,
         on_delete = models.CASCADE
     )
 
+    def __str__(self):
+        return self.route.__str__()+" - "+ str(self.pk)
+
 
 class Crew(models.Model):
     crew_name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.crew_name
 
 
 class Assignment(models.Model):
@@ -47,18 +62,24 @@ class Assignment(models.Model):
         on_delete = models.CASCADE
     )
 
+    def __str__(self):
+        return self.crew.__str__() + " in " +self.flight.__str__()
+
 
 class Passenger(models.Model):
     last_name = models.CharField(max_length=255)
     first_name = models.CharField(max_length=255)
     middle_initial = models.CharField(max_length=2)
-    birth_date = models.DateField
+    birth_date = models.DateField(default=datetime.now)
     gender = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.first_name + " " + self.last_name
 
 
 class Booking(models.Model):
-    total_cost = models.IntegerField
-    booking_date = models.DateField
+    total_cost = models.IntegerField()
+    booking_date = models.DateField(auto_now=True)
     passenger = models.ForeignKey(
         Passenger,
         on_delete = models.CASCADE
@@ -67,12 +88,15 @@ class Booking(models.Model):
 
 class Item(models.Model):
     description = models.CharField(max_length=255)
-    quantity = models.IntegerField
-    item_cost = models.IntegerField
+    quantity = models.IntegerField()
+    item_cost = models.IntegerField()
     booking = models.ForeignKey(
         Booking,
         on_delete = models.CASCADE
     )
+
+    def __str__(self):
+        return self.description
 
 
 class Itinerary(models.Model):
@@ -84,3 +108,9 @@ class Itinerary(models.Model):
         Booking,
         on_delete = models.CASCADE
     )
+
+    def __str__(self):
+        return self.flight.__str__() + " " + self.booking.__str__
+    
+    class Meta:
+        verbose_name_plural = 'Itineraries'
