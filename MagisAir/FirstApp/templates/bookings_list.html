@@ -3,7 +3,11 @@
 {% block title %}My Bookings{% endblock %}
 
 {% block content %}
-    <p><a href="{% url 'bookings_create' %}">Create New Booking</a></p>
+    <form method="post">
+        {% csrf_token %}
+        {{ booking_form }}
+        <button type="submit">Create New Booking</button>
+    </form>
     <h1>My Bookings</h1>
     <ul>
         {% for booking in bookings %}

@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from .models import *
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from .forms import *
@@ -62,6 +62,8 @@ class BookingsListView(LoginRequiredMixin, ListView):
 
     model = Booking
     template_name = 'bookings_list.html'
+    form_class = BookingsForm
+    success_url = reverse_lazy('booking_list')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -70,22 +72,28 @@ class BookingsListView(LoginRequiredMixin, ListView):
         if user.is_authenticated:
             profile = get_object_or_404(Passenger, user=user)
             context['bookings'] = Booking.objects.filter(author=profile)
-        context['booking_form'] = BookingForm
+        context['bookings_form'] = BookingsForm
+
         return context
 
     def post(self, request, *args, **kwargs):
-        booking_form = BookingForm(request.POST)
         user = self.request.user
 
         if user.is_authenticated:
             profile = get_object_or_404(Passenger, user=user)
-            booking_form = BookingForm(request.POST)
+            bookings_form = BookingsForm(request.POST)
 
-            if booking_form.is_valid():
-                booking = booking_form.save(commit=False)
+            if bookings_form.is_valid():
+                booking = bookings_form.save(commit=False)
                 booking.passenger = profile
                 booking.save()
 
-                return redirect('booking_list')
+                return redirect('bookings_list')
             
         return self.get(request, *args, **kwargs)
+
+
+class BookingsDetailView(DetailView):
+    model = Booking
+    template_name = 'bookings_detail.html'
+    context_object_name = 'booking'

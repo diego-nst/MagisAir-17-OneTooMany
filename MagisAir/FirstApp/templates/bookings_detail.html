@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Booking {{ booking.booking_id }}{% endblock %}
+
+{% block content %}
+    <p><a href="{% url 'bookings_list' %}">Return to list of bookings</a></p>
+    <h1>Flight Booking</h1>
+    Last Updated: {{ booking.booking_date }}<br/>
+    Passenger: {{ booking.passenger.last_name }}, {{ booking.passenger.first_name }} {{ booking.passenger.middle_initial }}.<br/>
+    Birth Date: {{ booking.passenger.birth_date }}<br/>
+    Gender: {{ booking.passenger.gender }}<br/>
+{% endblock %}
