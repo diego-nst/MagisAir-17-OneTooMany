@@ -110,7 +110,7 @@ class Item(models.Model):
         return self.description + " - " + self.booking.__str__()
     
     class Meta:
-        verbose_name_plural = 'Itineraries'
+        verbose_name_plural = 'Items'
 
 
 class Itinerary(models.Model):

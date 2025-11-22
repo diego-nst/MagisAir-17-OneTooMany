@@ -1,7 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from .models import *
-from django.views.generic.list import ListView
+from django.views.generic import ListView, CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
 
 
 # Create your views here.
@@ -50,5 +52,31 @@ class FlightsListView(ListView):
         ctx['searched'] = originSearch != "" or destinationSearch != "" or date_min_search != "" or date_max_search != ""
         ctx['flights'] = Flight.objects.all()
         return ctx
+    
+
+class BookingListView(LoginRequiredMixin, ListView):
+    '''
+    View that lists all of a user's flight bookings
+    '''
+
+    model = Booking
+    template_name = 'booking_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        if user.is_authenticaed:
+            profile = get_object_or_404(Profile, user=user)
+            context['bookings'] = Booking.objects.filter(author=profile)
+        return context
 
     
+class BookingCreateView(LoginRequiredMixin, CreateView):
+    '''
+    View to create a new booking
+    '''
+
+    model = Booking
+    template_name = 'booking_create.html'
+    # form_class =
+    success_url = reverse_lazy('booking_list')
