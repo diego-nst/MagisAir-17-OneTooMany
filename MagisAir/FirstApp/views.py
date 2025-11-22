@@ -1,9 +1,10 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from .models import *
 from django.views.generic import ListView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
+from .forms import *
 
 
 # Create your views here.
@@ -65,18 +66,26 @@ class BookingsListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
-        if user.is_authenticaed:
-            profile = get_object_or_404(Profile, user=user)
+
+        if user.is_authenticated:
+            profile = get_object_or_404(Passenger, user=user)
             context['bookings'] = Booking.objects.filter(author=profile)
+        context['booking_form'] = BookingForm
         return context
 
-    
-class BookingsCreateView(LoginRequiredMixin, CreateView):
-    '''
-    View to create a new booking
-    '''
+    def post(self, request, *args, **kwargs):
+        booking_form = BookingForm(request.POST)
+        user = self.request.user
 
-    model = Booking
-    template_name = 'bookings_create.html'
-    # form_class =
-    success_url = reverse_lazy('bookings_list')
+        if user.is_authenticated:
+            profile = get_object_or_404(Passenger, user=user)
+            booking_form = BookingForm(request.POST)
+
+            if booking_form.is_valid():
+                booking = booking_form.save(commit=False)
+                booking.passenger = profile
+                booking.save()
+
+                return redirect('booking_list')
+            
+        return self.get(request, *args, **kwargs)

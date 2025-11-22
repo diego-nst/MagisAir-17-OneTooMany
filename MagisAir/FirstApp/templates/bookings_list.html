@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}My Bookings{% endblock %}
+
+{% block content %}
+    <p><a href="{% url 'bookings_create' %}">Create New Booking</a></p>
+    <h1>My Bookings</h1>
+    <ul>
+        {% for booking in bookings %}
+            <li><a href='{{ booking.get_absolute_url }}'>Booking {{ booking_id }}</a></li>
+        {% empty %}
+            <p>You have not created any bookings.</p>
+        {% endfor %}
+    </ul>
+{% endblock %}
