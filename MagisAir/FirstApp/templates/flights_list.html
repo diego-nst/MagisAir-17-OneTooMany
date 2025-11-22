@@ -4,14 +4,22 @@
 
 {% block content %}
     <form method="GET" action="" >
-        <input type="search" name="search"> 
+        <p>Origin: </p><input type="search" name="origin"> 
+        <p>Desitnation: </p><input type="search" name="destination"> 
+        <p>Date Minimum: </p><input type="date" name="date_min"> 
+        <p>Date Maximum: </p><input type="date" name="date_max"> 
+        <br><br>
         <button type="submit"> Search </button>
     </form>
     {% for result in results %}
         <p> {{result}} - Leaving {{result.departure}}</p>
     {% empty %}
-        <p>nothing sad face</p>
+        {% if searched %}
+            <p>nothing sad face</p>
+        {% endif %}
     {% endfor %}
+    <hr>
+    <p>All Flights</p>
     <l>
     {% for flight in flights %}
         <p> {{flight}} - Leaving {{flight.departure}}</p>
