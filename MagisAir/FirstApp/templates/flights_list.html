@@ -3,6 +3,15 @@
 {% block title %} Flights {% endblock %}
 
 {% block content %}
+    <form method="GET" action="" >
+        <input type="search" name="search"> 
+        <button type="submit"> Search </button>
+    </form>
+    {% for result in results %}
+        <p> {{result}} - Leaving {{result.departure}}</p>
+    {% empty %}
+        <p>nothing sad face</p>
+    {% endfor %}
     <l>
     {% for flight in flights %}
         <p> {{flight}} - Leaving {{flight.departure}}</p>
