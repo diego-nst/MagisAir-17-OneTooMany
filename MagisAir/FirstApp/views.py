@@ -54,13 +54,13 @@ class FlightsListView(ListView):
         return ctx
     
 
-class BookingListView(LoginRequiredMixin, ListView):
+class BookingsListView(LoginRequiredMixin, ListView):
     '''
     View that lists all of a user's flight bookings
     '''
 
     model = Booking
-    template_name = 'booking_list.html'
+    template_name = 'bookings_list.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -71,12 +71,12 @@ class BookingListView(LoginRequiredMixin, ListView):
         return context
 
     
-class BookingCreateView(LoginRequiredMixin, CreateView):
+class BookingsCreateView(LoginRequiredMixin, CreateView):
     '''
     View to create a new booking
     '''
 
     model = Booking
-    template_name = 'booking_create.html'
+    template_name = 'bookings_create.html'
     # form_class =
-    success_url = reverse_lazy('booking_list')
+    success_url = reverse_lazy('bookings_list')
