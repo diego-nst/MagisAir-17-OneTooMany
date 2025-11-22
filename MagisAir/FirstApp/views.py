@@ -14,5 +14,16 @@ class FlightsListView(ListView):
     '''
 
     model = Flight
+    template_name = 'flights_list.html'
+
+    def get_context_data(self, **kwargs):
+        '''
+        adds information to context if user is logged in
+        displays commissions created and applied to
+        '''
+        ctx = super().get_context_data(**kwargs)
+
+        ctx['flights'] = Flight.objects.all()
+        return ctx
 
     

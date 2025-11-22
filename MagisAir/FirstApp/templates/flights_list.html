@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %} Flights {% endblock %}
+
+{% block content %}
+    <l>
+    {% for flight in flights %}
+        <p> {{flight}} - Leaving {{flight.departure}}</p>
+    {% endfor %}
+    </l>
+
+{% endblock %}
