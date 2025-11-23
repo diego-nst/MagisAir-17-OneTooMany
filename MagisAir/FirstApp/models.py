@@ -2,6 +2,7 @@ from django.db import models
 from datetime import datetime
 from django.urls import reverse
 from django.core.validators import MinValueValidator
+from Profile.models import Profile
 
 class City(models.Model):
     city_id = models.AutoField(primary_key=True)
@@ -80,6 +81,10 @@ class Passenger(models.Model):
     middle_initial = models.CharField(max_length=2)
     birth_date = models.DateField(default=datetime.now)
     gender = models.CharField(max_length=255)
+    profile = models.ForeignKey(
+        Profile,
+        on_delete=models.SET_NULL
+    )
 
     def __str__(self):
         return self.first_name + " " + self.last_name
