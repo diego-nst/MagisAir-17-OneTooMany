@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from .models import *
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from .forms import *
@@ -72,7 +72,8 @@ class BookingsListView(LoginRequiredMixin, ListView):
         if user.is_authenticated:
             profile = get_object_or_404(Profile, user=user)
             passenger = Passenger.objects.filter(profile=profile)
-            context['bookings'] = Booking.objects.filter(passenger=passenger).exclude(done_status=True)
+            context['unpaid_bookings'] = Booking.objects.filter(passenger=passenger).exclude(pending=False)
+            context['paid_bookings'] = Booking.objects.filter(passenger=passenger).exclude(pending=True)
         context['bookings_create'] = BookingsCreate
 
         return context
@@ -98,6 +99,18 @@ class BookingsDetailView(DetailView):
     '''
     View that shows the details of one particular booking
     '''
+
     model = Booking
     template_name = 'bookings_detail.html'
     context_object_name = 'booking'
+
+
+class BookingsUpdateView(UpdateView):
+    '''
+    View that allows the user to pay for a boooking
+    '''
+
+    model = Booking
+    template_name = 'bookings_update.html'
+    form_class = BookingsUpdate
+    success_url = reverse_lazy('bookings_list')

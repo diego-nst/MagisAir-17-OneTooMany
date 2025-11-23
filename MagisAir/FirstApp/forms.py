@@ -10,4 +10,4 @@ class BookingsCreate(forms.ModelForm):
 class BookingsUpdate(forms.ModelForm):
     class Meta:
         model = Booking
-        fields = ['done_status']
+        fields = ['pending']

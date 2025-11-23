@@ -83,7 +83,8 @@ class Passenger(models.Model):
     gender = models.CharField(max_length=255)
     profile = models.ForeignKey(
         Profile,
-        on_delete=models.SET_NULL
+        on_delete=models.SET_NULL,
+        null=True
     )
 
     def __str__(self):
@@ -98,7 +99,7 @@ class Booking(models.Model):
         Passenger,
         on_delete = models.CASCADE
     )
-    done_status = models.BooleanField(default=False)
+    pending = models.BooleanField(default=True)
 
     def __str__(self):
         return self.passenger.__str__() + " " + self.booking_id

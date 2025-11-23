@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Booking {{ booking.booking_id }} Payment{% endblock %}
+
+{% block content %}
+Please confirm you would like to pay for your booking.
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Confirm</button>
+</form>
+{% endblock %}

@@ -5,15 +5,23 @@
 {% block content %}
     <form method="post">
         {% csrf_token %}
-        {{ booking_form }}
+        {{ form.as_p }}
         <button type="submit">Create New Booking</button>
     </form>
-    <h1>Currently Pending Bookings</h1>
+    <h1>Unpaid Bookings</h1>
     <ul>
-        {% for booking in bookings %}
+        {% for booking in unpaid_bookings %}
             <li><a href='{{ booking.get_absolute_url }}'>Booking {{ booking_id }}</a></li>
         {% empty %}
-            <p>You currently have no bookings.</p>
+            <p>All bookings have been paid for.</p>
+        {% endfor %}
+    </ul>
+    <h1>Paid Bookings</h1>
+    <ul>
+        {% for booking in paid_bookings %}
+        <li><a href='{{ booking.get_absolute_url }}'>Booking {{ booking_id }}</a></li>
+        {% empty %}
+            <p>You do not have any flights booked.</p>
         {% endfor %}
     </ul>
 {% endblock %}
