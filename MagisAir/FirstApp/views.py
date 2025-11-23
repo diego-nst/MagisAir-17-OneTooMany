@@ -37,18 +37,20 @@ class FlightsListView(ListView):
                     results.add(flight)
         temp_results = results
         results = set()
-        if date_min_search != "" and date_max_search != "":
+        if date_min_search != "" and date_max_search != "" and date_min_search and date_max_search:
             for flight in Flight.objects.filter(departure__gte=date_min_search,departure__lte=date_max_search):
                 if(flight in temp_results or not temp_results):
                     results.add(flight)
-        elif date_min_search != "":
+        elif date_min_search and date_min_search != "":
             for flight in Flight.objects.filter(departure__gte=date_min_search):
                 if(flight in temp_results or not temp_results):
                     results.add(flight)
-        elif date_max_search != "":
+        elif date_max_search and date_max_search != "":
             for flight in Flight.objects.filter(departure__lte=date_max_search):
                 if(flight in temp_results or not temp_results):
                     results.add(flight)
+        else:
+            results = temp_results
         ctx['results'] = results
         ctx['searched'] = originSearch != "" or destinationSearch != "" or date_min_search != "" or date_max_search != ""
         ctx['flights'] = Flight.objects.all()

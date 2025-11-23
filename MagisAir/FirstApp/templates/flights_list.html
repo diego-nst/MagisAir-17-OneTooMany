@@ -13,6 +13,11 @@
     </form>
     {% for result in results %}
         <p> {{result}} - Leaving {{result.departure}}</p>
+        {% if user.is_authenticated %}
+            <form method="GET" action="" >
+                <button type="submit"> Book </button>
+            </form>
+        {% endif %}
     {% empty %}
         {% if searched %}
             <p>nothing sad face</p>
