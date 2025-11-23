@@ -8,12 +8,12 @@
         {{ booking_form }}
         <button type="submit">Create New Booking</button>
     </form>
-    <h1>My Bookings</h1>
+    <h1>Currently Pending Bookings</h1>
     <ul>
         {% for booking in bookings %}
             <li><a href='{{ booking.get_absolute_url }}'>Booking {{ booking_id }}</a></li>
         {% empty %}
-            <p>You have not created any bookings.</p>
+            <p>You currently have no bookings.</p>
         {% endfor %}
     </ul>
 {% endblock %}

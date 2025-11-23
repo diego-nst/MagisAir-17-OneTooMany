@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import datetime
+from django.urls import reverse
 from django.core.validators import MinValueValidator
 
 class City(models.Model):
@@ -92,9 +93,13 @@ class Booking(models.Model):
         Passenger,
         on_delete = models.CASCADE
     )
+    done_status = models.BooleanField(default=False)
 
     def __str__(self):
         return self.passenger.__str__() + " " + self.booking_id
+
+    def get_absolute_url(self):
+        return reverse('bookings_detail', args=[str(self.id)])
 
 
 class Item(models.Model):

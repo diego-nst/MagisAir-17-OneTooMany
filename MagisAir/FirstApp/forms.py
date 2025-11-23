@@ -2,7 +2,12 @@ from django import forms
 from .models import Booking
 
 
-class BookingsForm(forms.ModelForm):
+class BookingsCreate(forms.ModelForm):
     class Meta:
         model = Booking
         fields = []
+
+class BookingsUpdate(forms.ModelForm):
+    class Meta:
+        model = Booking
+        fields = ['done_status']
