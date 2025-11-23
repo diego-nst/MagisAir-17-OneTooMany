@@ -16,7 +16,7 @@
     <p><a href="{% url 'bookings_list' %}">Return to list of bookings</a></p>
 
     <h1>Flight Booking</h1>
-    {% if booking.pending %}
+    {% if not booking.pending %}
         <p><a href="{% url 'bookings_update' booking.booking_id %}">Pay for this booking</a></p>
     {% endif %}
 

@@ -11,7 +11,7 @@
     <h1>Unpaid Bookings</h1>
     <ul>
         {% for booking in unpaid_bookings %}
-            <li><a href='{{ booking.get_absolute_url }}'>Booking {{ booking_id }}</a></li>
+            <li><a href='{{ booking.get_absolute_url }}'>Booking {{ booking.booking_id }}</a></li>
         {% empty %}
             <p>All bookings have been paid for.</p>
         {% endfor %}
@@ -19,7 +19,7 @@
     <h1>Paid Bookings</h1>
     <ul>
         {% for booking in paid_bookings %}
-        <li><a href='{{ booking.get_absolute_url }}'>Booking {{ booking_id }}</a></li>
+        <li><a href='{{ booking.get_absolute_url }}'>Booking {{ booking.booking_id }}</a></li>
         {% empty %}
             <p>You do not have any flights booked.</p>
         {% endfor %}

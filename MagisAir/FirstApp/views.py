@@ -72,8 +72,8 @@ class BookingsListView(LoginRequiredMixin, ListView):
         if user.is_authenticated:
             profile = get_object_or_404(Profile, user=user)
             passenger = Passenger.objects.filter(profile=profile)
-            context['unpaid_bookings'] = Booking.objects.filter(passenger=passenger[0]).exclude(pending=False)
-            context['paid_bookings'] = Booking.objects.filter(passenger=passenger[0]).exclude(pending=True)
+            context['unpaid_bookings'] = Booking.objects.filter(passenger=passenger[0]).exclude(paid=True)
+            context['paid_bookings'] = Booking.objects.filter(passenger=passenger[0]).exclude(paid=False)
         context['bookings_create'] = BookingsCreate
 
         return context
@@ -87,7 +87,8 @@ class BookingsListView(LoginRequiredMixin, ListView):
 
             if bookings_create.is_valid():
                 booking = bookings_create.save(commit=False)
-                booking.passenger = Passenger.objects.filter(profile=profile)
+                passenger = Passenger.objects.filter(profile=profile)
+                booking.passenger = passenger[0]
                 booking.save()
 
                 return redirect('bookings_list')

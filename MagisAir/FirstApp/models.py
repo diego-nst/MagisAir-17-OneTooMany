@@ -93,13 +93,13 @@ class Passenger(models.Model):
 
 class Booking(models.Model):
     booking_id = models.AutoField(primary_key=True)
-    total_cost = models.FloatField(validators=[MinValueValidator(0)])
+    total_cost = models.FloatField(validators=[MinValueValidator(0)], default=0)
     booking_date = models.DateField(auto_now=True)
     passenger = models.ForeignKey(
         Passenger,
         on_delete = models.CASCADE
     )
-    pending = models.BooleanField(default=True)
+    paid = models.BooleanField(default=False)
 
     def __str__(self):
         return self.passenger.__str__() + " " + str(self.booking_id)
