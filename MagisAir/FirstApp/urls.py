@@ -6,5 +6,5 @@ urlpatterns = [
     path('flights',views.FlightsListView.as_view(), name='flights' ),
     path('bookings', views.BookingsListView.as_view(), name='bookings_list'),
     path('booking/<int:pk>', views.BookingsDetailView.as_view(), name='bookings_detail'),
-    path('booking/<int:pk>/pay', views.BookingsUpdateView.as_view(), name='bookigns_update')
+    path('booking/<int:pk>/pay', views.BookingsUpdateView.as_view(), name='bookings_update')
 ]

@@ -63,7 +63,7 @@ class BookingsListView(LoginRequiredMixin, ListView):
     model = Booking
     template_name = 'bookings_list.html'
     form_class = BookingsCreate
-    success_url = reverse_lazy('booking_list')
+    success_url = reverse_lazy('bookings_list')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -72,8 +72,8 @@ class BookingsListView(LoginRequiredMixin, ListView):
         if user.is_authenticated:
             profile = get_object_or_404(Profile, user=user)
             passenger = Passenger.objects.filter(profile=profile)
-            context['unpaid_bookings'] = Booking.objects.filter(passenger=passenger).exclude(pending=False)
-            context['paid_bookings'] = Booking.objects.filter(passenger=passenger).exclude(pending=True)
+            context['unpaid_bookings'] = Booking.objects.filter(passenger=passenger[0]).exclude(pending=False)
+            context['paid_bookings'] = Booking.objects.filter(passenger=passenger[0]).exclude(pending=True)
         context['bookings_create'] = BookingsCreate
 
         return context

@@ -102,10 +102,10 @@ class Booking(models.Model):
     pending = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.passenger.__str__() + " " + self.booking_id
+        return self.passenger.__str__() + " " + str(self.booking_id)
 
     def get_absolute_url(self):
-        return reverse('bookings_detail', args=[str(self.id)])
+        return reverse('bookings_detail', args=[str(self.booking_id)])
 
 
 class Item(models.Model):

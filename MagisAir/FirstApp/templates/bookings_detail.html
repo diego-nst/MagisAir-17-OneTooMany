@@ -17,7 +17,7 @@
 
     <h1>Flight Booking</h1>
     {% if booking.pending %}
-        <p><a href="{% url 'bookings_update' %}">Pay for this booking</a></p>
+        <p><a href="{% url 'bookings_update' booking.booking_id %}">Pay for this booking</a></p>
     {% endif %}
 
     Last Updated: {{ booking.booking_date }}<br/>
