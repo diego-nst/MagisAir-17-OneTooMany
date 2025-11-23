@@ -94,6 +94,9 @@ class BookingsListView(LoginRequiredMixin, ListView):
 
 
 class BookingsDetailView(DetailView):
+    '''
+    View that shows the details of one particular booking
+    '''
     model = Booking
     template_name = 'bookings_detail.html'
     context_object_name = 'booking'
