@@ -94,7 +94,7 @@ class Passenger(models.Model):
 class Booking(models.Model):
     booking_id = models.AutoField(primary_key=True)
     total_cost = models.FloatField(validators=[MinValueValidator(0)], default=0)
-    booking_date = models.DateField(auto_now=True)
+    booking_date = models.DateField(auto_now_add=True)
     passenger = models.ForeignKey(
         Passenger,
         on_delete = models.CASCADE
