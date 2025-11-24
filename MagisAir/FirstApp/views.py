@@ -64,6 +64,8 @@ class FlightsListView(ListView):
         itinerary.flight = Flight.objects.get(flight_num=request.POST.get('flight'))
         itinerary.booking = Booking.objects.get(booking_id=request.POST.get('booking'))
         itinerary.save()
+        itinerary.booking.total_cost += itinerary.flight.flight_cost
+        itinerary.booking.save()
         return redirect(reverse_lazy('bookings:flights'))
 
 
