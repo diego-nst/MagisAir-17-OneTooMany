@@ -121,6 +121,14 @@ class BookingsDetailView(DetailView):
     template_name = 'bookings_detail.html'
     context_object_name = 'booking'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        booking = self.get_object()
+        context['itineraries'] = Itinerary.objects.filter(booking=booking)
+
+        return context
+
 
 class BookingsUpdateView(UpdateView):
     '''

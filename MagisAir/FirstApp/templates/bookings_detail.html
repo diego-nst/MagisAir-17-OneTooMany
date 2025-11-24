@@ -39,7 +39,7 @@
             <th>Arrival</th>
             <th>Duration</th>
         </tr>
-        {% for itinerary in booking.itinerary_set.all %}
+        {% for itinerary in itineraries %}
             <tr>
                 <td>{{ itinerary.flight.flight_num }}</td>
                 <td>{{ itinerary.flight.route.origin }}</td>
