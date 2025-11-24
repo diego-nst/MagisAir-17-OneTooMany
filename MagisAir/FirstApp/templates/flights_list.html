@@ -12,7 +12,11 @@
         <button type="submit"> Search </button>
     </form>
     {% for result in results %}
-        <p> {{result}} - Leaving {{result.departure}}</p>
+        <p> {{result}}</p>
+        <p> Leaving: {{result.departure}}</p>
+        <p> Arriving: {{result.arrival}}</p>
+        <p> Cost: {{result.cost}}</p>
+        
         {% if user.is_authenticated %}
             <form method="POST" action="" >
                 {% csrf_token %}
@@ -23,7 +27,7 @@
                         <option value ={{booking.booking_id}}>{{booking}}</option>
                     {% endfor %}
                 </select>
-                {% if booking %}
+                {% if pending_bookings %}
                 {% else %}
                 <p> No current pending bookings</p>
                 {% endif %}
@@ -35,12 +39,5 @@
             <p>nothing sad face</p>
         {% endif %}
     {% endfor %}
-    <hr>
-    <p>All Flights</p>
-    <l>
-    {% for flight in flights %}
-        <p> {{flight}} - Leaving {{flight.departure}}</p>
-    {% endfor %}
-    </l>
 
 {% endblock %}

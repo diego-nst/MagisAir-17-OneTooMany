@@ -55,8 +55,10 @@ class FlightsListView(ListView):
         current_passenger = Passenger.objects.get(profile=self.request.user.profile)
         ctx['pending_bookings'] =  Booking.objects.filter(passenger=current_passenger, pending=True)
         ctx['results'] = results
-        ctx['searched'] = (originSearch != "" and originSearch != None) or (destinationSearch != "" and destinationSearch != None) or (date_min_search != "" and date_min_search != None) or (date_max_search != "" and date_max_search != None)
-        ctx['flights'] = Flight.objects.all()
+        searched = (originSearch != "" and originSearch != None) or (destinationSearch != "" and destinationSearch != None) or (date_min_search != "" and date_min_search != None) or (date_max_search != "" and date_max_search != None)
+        ctx['searched'] = searched
+        if not searched:
+            ctx['results'] = Flight.objects.all()
         return ctx
     
     def post(self, request, *args, **kwargs):
