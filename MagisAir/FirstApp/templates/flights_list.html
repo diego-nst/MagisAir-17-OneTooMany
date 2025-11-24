@@ -15,8 +15,8 @@
         <p> {{result}}</p>
         <p> Leaving: {{result.departure}}</p>
         <p> Arriving: {{result.arrival}}</p>
-        <p> Cost: {{result.cost}}</p>
-        
+        <p> Cost: {{result.flight_cost}}</p>
+
         {% if user.is_authenticated %}
             <form method="POST" action="" >
                 {% csrf_token %}
