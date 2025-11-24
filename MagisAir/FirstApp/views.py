@@ -51,11 +51,21 @@ class FlightsListView(ListView):
                     results.add(flight)
         else:
             results = temp_results
+        
+        current_passenger = Passenger.objects.get(profile=self.request.user.profile)
+        ctx['pending_bookings'] =  Booking.objects.filter(passenger=current_passenger, pending=True)
         ctx['results'] = results
-        ctx['searched'] = originSearch != "" or destinationSearch != "" or date_min_search != "" or date_max_search != ""
+        ctx['searched'] = (originSearch != "" and originSearch != None) or (destinationSearch != "" and destinationSearch != None) or (date_min_search != "" and date_min_search != None) or (date_max_search != "" and date_max_search != None)
         ctx['flights'] = Flight.objects.all()
         return ctx
     
+    def post(self, request, *args, **kwargs):
+        itinerary = Itinerary()
+        itinerary.flight = Flight.objects.get(flight_num=request.POST.get('flight'))
+        itinerary.booking = Booking.objects.get(booking_id=request.POST.get('booking'))
+        itinerary.save()
+        return redirect(reverse_lazy('bookings:flights'))
+
 
 class BookingsListView(LoginRequiredMixin, ListView):
     '''

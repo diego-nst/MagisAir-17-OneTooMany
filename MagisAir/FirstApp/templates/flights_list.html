@@ -14,7 +14,19 @@
     {% for result in results %}
         <p> {{result}} - Leaving {{result.departure}}</p>
         {% if user.is_authenticated %}
-            <form method="GET" action="" >
+            <form method="POST" action="" >
+                {% csrf_token %}
+                <input type="hidden" name="flight" value={{result.flight_num}}>
+                <label>Book to:</label>
+                <select name="booking">
+                    {% for booking in pending_bookings %}
+                        <option value ={{booking.booking_id}}>{{booking}}</option>
+                    {% endfor %}
+                </select>
+                {% if booking %}
+                {% else %}
+                <p> No current pending bookings</p>
+                {% endif %}
                 <button type="submit"> Book </button>
             </form>
         {% endif %}

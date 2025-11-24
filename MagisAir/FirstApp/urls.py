@@ -8,3 +8,5 @@ urlpatterns = [
     path('booking/<int:pk>', views.BookingsDetailView.as_view(), name='bookings_detail'),
     path('booking/<int:pk>/pay', views.BookingsUpdateView.as_view(), name='bookigns_update')
 ]
+
+app_name = 'bookings'
