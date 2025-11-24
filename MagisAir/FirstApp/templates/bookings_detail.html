@@ -16,11 +16,14 @@
     <p><a href="{% url 'bookings_list' %}">Return to list of bookings</a></p>
 
     <h1>Flight Booking</h1>
-    {% if booking.pending %}
-        <p><a href="{% url 'bookings_update' %}">Pay for this booking</a></p>
+    {% if not booking.paid %}
+        <p><a href="{% url 'bookings_update' booking.booking_id %}">Pay for this booking</a></p>
     {% endif %}
 
-    Last Updated: {{ booking.booking_date }}<br/>
+    {% if booking.paid %}
+        Date: {{ booking.booking_date }}<br/>
+    {% endif %}
+    
     Passenger: {{ booking.passenger.last_name }}, {{ booking.passenger.first_name }} {{ booking.passenger.middle_initial }}.<br/>
     Birth Date: {{ booking.passenger.birth_date }}<br/>
     Gender: {{ booking.passenger.gender }}<br/>
