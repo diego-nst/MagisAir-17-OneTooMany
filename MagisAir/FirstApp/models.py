@@ -105,7 +105,7 @@ class Booking(models.Model):
         return self.passenger.__str__() + " " + str(self.booking_id)
 
     def get_absolute_url(self):
-        return reverse('bookings_detail', args=[str(self.booking_id)])
+        return reverse('bookings:bookings_detail', args=[str(self.booking_id)])
 
 
 class Item(models.Model):

@@ -53,7 +53,7 @@ class FlightsListView(ListView):
             results = temp_results
         
         current_passenger = Passenger.objects.get(profile=self.request.user.profile)
-        ctx['pending_bookings'] =  Booking.objects.filter(passenger=current_passenger, pending=True)
+        ctx['pending_bookings'] =  Booking.objects.filter(passenger=current_passenger, paid=False)
         ctx['results'] = results
         searched = (originSearch != "" and originSearch != None) or (destinationSearch != "" and destinationSearch != None) or (date_min_search != "" and date_min_search != None) or (date_max_search != "" and date_max_search != None)
         ctx['searched'] = searched
@@ -107,7 +107,7 @@ class BookingsListView(LoginRequiredMixin, ListView):
                 booking.passenger = passenger[0]
                 booking.save()
 
-                return redirect('bookings_list')
+                return redirect('bookings:bookings_list')
             
         return self.get(request, *args, **kwargs)
 
@@ -130,4 +130,4 @@ class BookingsUpdateView(UpdateView):
     model = Booking
     template_name = 'bookings_update.html'
     form_class = BookingsUpdate
-    success_url = reverse_lazy('bookings_list')
+    success_url = reverse_lazy('bookings:bookings_list')

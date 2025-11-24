@@ -13,11 +13,11 @@
 {% endblock %}
 
 {% block content %}
-    <p><a href="{% url 'bookings_list' %}">Return to list of bookings</a></p>
+    <p><a href="{% url 'bookings:bookings_list' %}">Return to list of bookings</a></p>
 
     <h1>Flight Booking</h1>
     {% if not booking.paid %}
-        <p><a href="{% url 'bookings_update' booking.booking_id %}">Pay for this booking</a></p>
+        <p><a href="{% url 'bookings:bookings_update' booking.booking_id %}">Pay for this booking</a></p>
     {% endif %}
 
     {% if booking.paid %}
@@ -39,7 +39,7 @@
             <th>Arrival</th>
             <th>Duration</th>
         </tr>
-        {% for itinerary in booking.items %}
+        {% for itinerary in booking.itinerary_set.all %}
             <tr>
                 <td>{{ itinerary.flight.flight_num }}</td>
                 <td>{{ itinerary.flight.route.origin }}</td>
