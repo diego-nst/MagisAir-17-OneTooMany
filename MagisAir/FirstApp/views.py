@@ -9,7 +9,7 @@ from .forms import *
 
 # Create your views here.
 def home(request):
-    return HttpResponse("Hello Django")
+    return render(request, 'home.html')
 
 class FlightsListView(ListView):
     '''
