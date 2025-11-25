@@ -139,3 +139,24 @@ class BookingsUpdateView(UpdateView):
     template_name = 'bookings_update.html'
     form_class = BookingsUpdate
     success_url = reverse_lazy('bookings:bookings_list')
+
+
+class UserFlightsView(LoginRequiredMixin, ListView):
+    model = Booking
+    template_name = 'user_flights.html'
+    context_object_name = 'bookings'
+
+    def get_queryset(self):
+        profile = get_object_or_404(Profile, user=self.request.user)
+        passenger = get_object_or_404(Passenger, profile=profile)
+
+        # Get bookings oldest first to assign fixed numbers
+        bookings_oldest_first = Booking.objects.filter(passenger=passenger).order_by('booking_id')
+
+        # Assign user-local numbers
+        for idx, booking in enumerate(bookings_oldest_first, start=1):
+            booking.user_number = idx
+
+        # Now reverse the list so newest booking appears first
+        bookings_descending = list(reversed(bookings_oldest_first))
+        return bookings_descending
