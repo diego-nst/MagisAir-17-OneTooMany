@@ -78,7 +78,7 @@ class Passenger(models.Model):
     passenger_id = models.AutoField(primary_key=True)
     last_name = models.CharField(max_length=255)
     first_name = models.CharField(max_length=255)
-    middle_initial = models.CharField(max_length=2)
+    middle_initial = models.CharField(max_length=2, null=True)
     birth_date = models.DateField(default=datetime.now)
     gender = models.CharField(max_length=255)
     profile = models.ForeignKey(

@@ -27,26 +27,26 @@ class FlightsListView(ListView):
         date_max_search = self.request.GET.get('date_max')        
         results = set()
         if originSearch and originSearch != "":
-            for flight in Flight.objects.filter(route__origin__city_name__contains=originSearch):
+            for flight in Flight.objects.filter(route__origin__city_name__contains=originSearch, departure__gt=datetime.now):
                 results.add(flight)
         if destinationSearch and destinationSearch != "":
             temp_results = results
             results = set()
-            for flight in Flight.objects.filter(route__destination__city_name__contains=destinationSearch):
+            for flight in Flight.objects.filter(route__destination__city_name__contains=destinationSearch, departure__gt=datetime.now):
                 if(flight in temp_results or not temp_results):
                     results.add(flight)
         temp_results = results
         results = set()
         if date_min_search != "" and date_max_search != "" and date_min_search and date_max_search:
-            for flight in Flight.objects.filter(departure__gte=date_min_search,departure__lte=date_max_search):
+            for flight in Flight.objects.filter(departure__gte=date_min_search,departure__lte=date_max_search, departure__gt=datetime.now):
                 if(flight in temp_results or not temp_results):
                     results.add(flight)
         elif date_min_search and date_min_search != "":
-            for flight in Flight.objects.filter(departure__gte=date_min_search):
+            for flight in Flight.objects.filter(departure__gte=date_min_search, departure__gt=datetime.now):
                 if(flight in temp_results or not temp_results):
                     results.add(flight)
         elif date_max_search and date_max_search != "":
-            for flight in Flight.objects.filter(departure__lte=date_max_search):
+            for flight in Flight.objects.filter(departure__lte=date_max_search, departure__gt=datetime.now):
                 if(flight in temp_results or not temp_results):
                     results.add(flight)
         else:
