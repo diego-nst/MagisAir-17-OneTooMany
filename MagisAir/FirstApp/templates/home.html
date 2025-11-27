@@ -18,7 +18,9 @@
         <li><a href="{% url 'bookings:flights' %}">View All Flights</a></li>
         <li><a href="{% url 'bookings:bookings_list' %}">View Bookings</a></li>
         <li><a href="{% url 'bookings:user_flights' %}">User History</a></li>
+        {% if not user.is_authenticated %}
         <li><a href="/profile/login/">Profile Login</a></li>
+        {% endif %}
     </ul>
 </body>
 </html>
