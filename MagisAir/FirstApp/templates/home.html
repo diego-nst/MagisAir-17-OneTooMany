@@ -1,18 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>MagisAir Home</title>
-    <style>
-        body { font-family: sans-serif; padding: 20px; }
-        h1 { margin-bottom: 20px; }
-        ul { list-style: none; padding-left: 0; }
-        li { margin: 5px 0; }
-        a { text-decoration: none; color: #007bff; }
-        a:hover { text-decoration: underline; }
-    </style>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %} MagisAir Home {% endblock %}
+
+{% block content %}
     <h1>MagisAir Home</h1>
     <ul>
         <li><a href="{% url 'bookings:flights' %}">View All Flights</a></li>
@@ -22,5 +12,4 @@
         <li><a href="/profile/login/">Profile Login</a></li>
         {% endif %}
     </ul>
-</body>
-</html>
+{% endblock %}
