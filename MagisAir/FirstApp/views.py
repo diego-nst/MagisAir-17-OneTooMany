@@ -64,13 +64,29 @@ class FlightsListView(ListView):
         return ctx
     
     def post(self, request, *args, **kwargs):
-        itinerary = Itinerary()
-        itinerary.flight = Flight.objects.get(flight_num=request.POST.get('flight'))
-        itinerary.booking = Booking.objects.get(booking_id=request.POST.get('booking'))
-        itinerary.save()
-        itinerary.booking.total_cost += itinerary.flight.flight_cost
-        itinerary.booking.save()
-        return redirect(reverse_lazy('bookings:flights'))
+        flight_num=request.POST.get('flight')
+        booking_id = request.POST.get('booking')
+        exists = False
+        overlap = False
+        flight = Flight.objects.get(flight_num=flight_num)
+        for itinerary in Itinerary.objects.filter(booking_id=booking_id):
+            if itinerary.flight == Flight.objects.get(flight_num=flight_num):
+                exists = True
+                break
+            if not(itinerary.flight.arrival < flight.departure or flight.arrival < itinerary.flight.departure):
+                overlap = True
+                break
+
+        if(not exists and not overlap):
+            itinerary = Itinerary()
+            itinerary.flight = Flight.objects.get(flight_num=flight_num)
+            itinerary.booking = Booking.objects.get(booking_id=booking_id)
+            itinerary.save()
+            itinerary.booking.total_cost += itinerary.flight.flight_cost
+            itinerary.booking.save()
+        else: 
+            return redirect(reverse_lazy('bookings:flights'))
+        return redirect(reverse_lazy('bookings:bookings_list'))
 
 
 class BookingsListView(LoginRequiredMixin, ListView):
