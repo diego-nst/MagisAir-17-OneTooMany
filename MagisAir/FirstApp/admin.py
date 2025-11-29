@@ -25,8 +25,12 @@ class ItemAdmin(admin.ModelAdmin):
     model = Item
 
 
-class ItemInLine(admin.TabularInline):
-    model = Item
+class RequestAdmin(admin.ModelAdmin):
+    model = Request
+
+
+class RequestInLine(admin.TabularInline):
+    model = Request
 
 
 class ItineraryAdmin(admin.ModelAdmin):
@@ -54,7 +58,7 @@ class FlightAdmin(admin.ModelAdmin):
 class BookingAdmin(admin.ModelAdmin):
     model = Booking
 
-    inlines = [ItemInLine, ItineraryInLine]
+    inlines = [ItineraryInLine, RequestInLine]
 
 
 class CrewAdmin(admin.ModelAdmin):
@@ -70,6 +74,7 @@ admin.site.register(Route, RouteAdmin)
 admin.site.register(Flight, FlightAdmin)
 admin.site.register(Passenger, PassengerAdmin)
 admin.site.register(Booking, BookingAdmin)
+admin.site.register(Request, RequestAdmin)
 admin.site.register(Item, ItemAdmin)
 admin.site.register(Crew, CrewAdmin)
 admin.site.register(Assignment, AssignmentAdmin)
