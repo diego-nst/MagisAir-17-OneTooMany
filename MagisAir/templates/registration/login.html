@@ -1,18 +1,67 @@
 {% extends 'base.html' %}
 
-{% block header %}Login{% endblock %}
+{% block title %}Login{% endblock %}
+
 {% block content %}
-    {% if form.errors %}
-        {% for field in form %}
-            {% for error in field.errors %}
-                {{error}}
-            {% endfor %}
-        {% endfor %}
-    {% endif %}
+    <style>
+        .login-card {
+            max-width: 450px;
+            margin: 3rem auto;
+            padding: 1.5rem;
+            border: 1px solid #ddd;
+            border-radius: 0.5rem;
+            background-color: #fff;
+        }
+
+        .login-card h2 {
+            text-align: center;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .login-card form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .login-card input {
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 0.25rem;
+        }
+
+        .login-card button {
+            padding: 0.5rem;
+            border: none;
+            border-radius: 0.25rem;
+            background-color: #0d6efd;
+            color: white;
+            cursor: pointer;
+        }
+
+        .login-card button:hover {
+            background-color: #0b5ed7;
+        }
+
+        .login-card a {
+            display: block;
+            text-align: center;
+            margin-top: 0.75rem;
+            color: #0d6efd;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+    </style>
+
+    <div class="login-card">
+
     <form method="POST">
         {% csrf_token %}
-        {{form.as_p}}
+        {{ form.as_p }}
         <button type="submit">Login</button>
     </form>
+
     <a href="{% url 'password_reset' %}">Forgot Password?</a>
+</div>
 {% endblock %}
