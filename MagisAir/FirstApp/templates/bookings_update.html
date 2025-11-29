@@ -3,10 +3,27 @@
 {% block title %}Booking {{ booking.booking_id }} Payment{% endblock %}
 
 {% block content %}
-Please confirm you would like to pay for your booking.
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Confirm</button>
-</form>
+<div class="container shadow-lg rounded-4 w-75 mx-auto g-5 p-5">
+    
+    <div class=""><h4>Confirm payment for:</h4></div>
+    <form method="post">
+        {% csrf_token %}
+        <div class="row d-flex">
+            <div class="d-flex justify-content-between">
+                <h3 class="">
+                    Booking {{ booking.booking_id }}
+                </h3>
+                <div class="fs-5 text-primary fw-semibold">₱ {{ booking.total_cost|floatformat:2 }}</div>
+            </div>
+
+            <div class="d-flex justify-content-end gap-5">
+                <h5 class="">{{ form.as_p }}</h5>
+                <div class="">
+                    <button type="submit" class="btn btn-primary">Confirm</button>
+                </div>
+            </div>
+        </div>
+        
+    </form>
+</div>
 {% endblock %}
