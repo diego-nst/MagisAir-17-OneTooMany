@@ -39,7 +39,6 @@ class Flight(models.Model):
     flight_num = models.AutoField(primary_key=True)
     departure = models.DateTimeField(default=datetime.now)
     arrival = models.DateTimeField(default=datetime.now)
-    flight_date = models.DateField(default=datetime.now)
     flight_cost = models.FloatField(validators=[MinValueValidator(0)])
     route = models.ForeignKey(
         Route,
@@ -110,15 +109,10 @@ class Booking(models.Model):
 
 class Item(models.Model):
     description = models.CharField(max_length=255)
-    quantity = models.IntegerField(validators=[MinValueValidator(1)])
     item_cost = models.FloatField(validators=[MinValueValidator(0)])
-    booking = models.ForeignKey(
-        Booking,
-        on_delete = models.CASCADE
-    )
 
     def __str__(self):
-        return self.description + " - " + self.booking.__str__()
+        return self.description
     
     class Meta:
         verbose_name_plural = 'Items'
@@ -139,3 +133,14 @@ class Itinerary(models.Model):
     
     class Meta:
         verbose_name_plural = 'Itineraries'
+
+class Request(models.Model):
+    booking = models.ForeignKey(
+        Booking,
+        on_delete = models.CASCADE
+    )
+    item = models.ForeignKey(
+        Item,
+        on_delete = models.CASCADE
+    )
+    quantity = models.IntegerField(validators=[MinValueValidator(1)])
