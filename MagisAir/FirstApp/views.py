@@ -73,16 +73,6 @@ class FlightsListView(ListView):
         return redirect(reverse_lazy('bookings:flights'))
 
 
-from django.shortcuts import get_object_or_404, redirect
-from django.urls import reverse_lazy
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView
-
-# assume these imports already exist in your file:
-# from .models import Booking, Passenger, Itinerary, Flight, ...
-# from Profile.models import Profile
-# from .forms import BookingsCreate
-
 class BookingsListView(LoginRequiredMixin, ListView):
     """
     View that lists all of a user's flight bookings
@@ -175,11 +165,12 @@ class BookingsDetailView(DetailView):
         return context
 
 
-class BookingsUpdateView(UpdateView):
+class BookingsUpdateView(LoginRequiredMixin, UpdateView):
     '''
     View that allows the user to pay for a boooking
     '''
 
+    login_url = '/profile/login/'
     model = Booking
     template_name = 'bookings_update.html'
     form_class = BookingsUpdate
