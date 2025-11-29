@@ -71,11 +71,20 @@ class FlightsListView(ListView):
         return redirect(reverse_lazy('bookings:flights'))
 
 
-class BookingsListView(LoginRequiredMixin, ListView):
-    '''
-    View that lists all of a user's flight bookings
-    '''
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView
 
+# assume these imports already exist in your file:
+# from .models import Booking, Passenger, Itinerary, Flight, ...
+# from Profile.models import Profile
+# from .forms import BookingsCreate
+
+class BookingsListView(LoginRequiredMixin, ListView):
+    """
+    View that lists all of a user's flight bookings
+    """
     model = Booking
     template_name = 'bookings_list.html'
     form_class = BookingsCreate
@@ -85,12 +94,45 @@ class BookingsListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         user = self.request.user
 
+        # default empty values so template won't error
+        context['unpaid_bookings'] = Booking.objects.none()
+        context['paid_bookings'] = Booking.objects.none()
+        context['bookings_create'] = BookingsCreate
+
         if user.is_authenticated:
             profile = get_object_or_404(Profile, user=user)
-            passenger = Passenger.objects.filter(profile=profile)
-            context['unpaid_bookings'] = Booking.objects.filter(passenger=passenger[0]).exclude(paid=True)
-            context['paid_bookings'] = Booking.objects.filter(passenger=passenger[0]).exclude(paid=False)
-        context['bookings_create'] = BookingsCreate
+
+            # get the passenger (use .first() to be safe)
+            passenger = Passenger.objects.filter(profile=profile).first()
+            if not passenger:
+                return context
+
+            # fetch ALL bookings for this passenger once, ordered by booking_id
+            all_user_bookings = list(
+                Booking.objects.filter(passenger=passenger).order_by('booking_id')
+            )
+
+            # build a lookup: booking_id -> per-user number (1-based)
+            booking_number_map = {
+                b.booking_id: idx + 1 for idx, b in enumerate(all_user_bookings)
+            }
+
+            # fetch paid/unpaid sets (you already did this; keep same ordering as desired)
+            unpaid_qs = Booking.objects.filter(passenger=passenger).exclude(paid=True)
+            paid_qs = Booking.objects.filter(passenger=passenger).exclude(paid=False)
+
+            # convert to lists so we can attach attributes
+            unpaid_list = list(unpaid_qs)
+            paid_list = list(paid_qs)
+
+            # attach user_number attribute for template use: booking.user_number
+            for b in unpaid_list:
+                b.user_number = booking_number_map.get(b.booking_id, None)
+            for b in paid_list:
+                b.user_number = booking_number_map.get(b.booking_id, None)
+
+            context['unpaid_bookings'] = unpaid_list
+            context['paid_bookings'] = paid_list
 
         return context
 
@@ -103,12 +145,12 @@ class BookingsListView(LoginRequiredMixin, ListView):
 
             if bookings_create.is_valid():
                 booking = bookings_create.save(commit=False)
-                passenger = Passenger.objects.filter(profile=profile)
-                booking.passenger = passenger[0]
-                booking.save()
+                passenger = Passenger.objects.filter(profile=profile).first()
+                if passenger:
+                    booking.passenger = passenger
+                    booking.save()
+                    return redirect('bookings:bookings_list')
 
-                return redirect('bookings:bookings_list')
-            
         return self.get(request, *args, **kwargs)
 
 
