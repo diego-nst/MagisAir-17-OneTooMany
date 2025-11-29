@@ -52,8 +52,10 @@ class FlightsListView(ListView):
         else:
             results = temp_results
         
-        current_passenger = Passenger.objects.get(profile=self.request.user.profile)
-        ctx['pending_bookings'] =  Booking.objects.filter(passenger=current_passenger, paid=False)
+        user = self.request.user
+        if user.is_authenticated:
+            current_passenger = Passenger.objects.get(profile=self.request.user.profile)
+            ctx['pending_bookings'] =  Booking.objects.filter(passenger=current_passenger, paid=False)
         ctx['results'] = results
         searched = (originSearch != "" and originSearch != None) or (destinationSearch != "" and destinationSearch != None) or (date_min_search != "" and date_min_search != None) or (date_max_search != "" and date_max_search != None)
         ctx['searched'] = searched
@@ -89,6 +91,7 @@ class BookingsListView(LoginRequiredMixin, ListView):
     template_name = 'bookings_list.html'
     form_class = BookingsCreate
     success_url = reverse_lazy('bookings_list')
+    login_url = '/profile/login/'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
