@@ -11,7 +11,33 @@
     <h1>Unpaid Bookings</h1>
     <ul>
         {% for booking in unpaid_bookings %}
-            <li><a href='{{ booking.get_absolute_url }}'>Booking {{ booking.booking_id }}</a></li>
+        <div class="booking" style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+        <!-- Fixed per-user booking number -->
+        <h2>Booking #{{ booking.user_number }}</h2>
+        <p>Total Cost: {{ booking.total_cost }}</p>
+        <p>Status: {% if booking.paid %}Paid{% else %}Unpaid{% endif %}</p>
+
+        <a href="{% url 'bookings:bookings_update' booking.booking_id %}">Pay for this booking</a>
+
+        <!-- Toggle button -->
+        <button class="toggle-flights" style="margin-bottom: 5px;">Show Flights</button>
+
+        <!-- Flights list, hidden by default -->
+        <ul class="flights-list" style="display: none; list-style-type: none; padding-left: 0;">
+          {% for itinerary in booking.itinerary_set.all %}
+            <li style="border-top: 1px solid #eee; padding: 5px 0;">
+              <strong>Flight:</strong> {{ itinerary.flight.flight_num }}<br>
+              <strong>From:</strong> {{ itinerary.flight.route.origin.city_name }}<br>
+              <strong>To:</strong> {{ itinerary.flight.route.destination.city_name }}<br>
+              <strong>Departure:</strong> {{ itinerary.flight.departure }}<br>
+              <strong>Cost:</strong> {{ itinerary.flight.flight_cost }}
+            </li>
+          {% empty %}
+            <li>No flights in this booking.</li>
+          {% endfor %}
+        </ul>
+        </div>
+        
         {% empty %}
             <p>All bookings have been paid for.</p>
         {% endfor %}
@@ -19,9 +45,52 @@
     <h1>Paid Bookings</h1>
     <ul>
         {% for booking in paid_bookings %}
-        <li><a href='{{ booking.get_absolute_url }}'>Booking {{ booking.booking_id }}</a></li>
+        <div class="booking" style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+        <!-- Fixed per-user booking number -->
+        <h2>Booking #{{ booking.user_number }}</h2>
+        <p>Total Paid: {{ booking.total_cost }}</p>
+        <p>Status: {% if booking.paid %}Paid{% else %}Unpaid{% endif %}</p>
+
+        <!-- Toggle button -->
+        <button class="toggle-flights" style="margin-bottom: 5px;">Show Flights</button>
+
+        <!-- Flights list, hidden by default -->
+        <ul class="flights-list" style="display: none; list-style-type: none; padding-left: 0;">
+          {% for itinerary in booking.itinerary_set.all %}
+            <li style="border-top: 1px solid #eee; padding: 5px 0;">
+              <strong>Flight:</strong> {{ itinerary.flight.flight_num }}<br>
+              <strong>From:</strong> {{ itinerary.flight.route.origin.city_name }}<br>
+              <strong>To:</strong> {{ itinerary.flight.route.destination.city_name }}<br>
+              <strong>Departure:</strong> {{ itinerary.flight.departure }}<br>
+              <strong>Cost:</strong> {{ itinerary.flight.flight_cost }}
+            </li>
+          {% empty %}
+            <li>No flights in this booking.</li>
+          {% endfor %}
+        </ul>
+        </div>
+        
         {% empty %}
-            <p>You do not have any flights booked.</p>
+            <p>You have no paid bookings.</p>
         {% endfor %}
     </ul>
+
+    <!-- JS to toggle flights visibility -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const buttons = document.querySelectorAll('.toggle-flights');
+      buttons.forEach(button => {
+        button.addEventListener('click', function() {
+          const flightsList = this.nextElementSibling;
+          if (flightsList.style.display === 'none') {
+            flightsList.style.display = 'block';
+            this.textContent = 'Hide Flights';
+          } else {
+            flightsList.style.display = 'none';
+            this.textContent = 'Show Flights';
+          }
+        });
+      });
+    });
+    </script>
 {% endblock %}
