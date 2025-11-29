@@ -3,41 +3,98 @@
 {% block title %} Flights {% endblock %}
 
 {% block content %}
-    <form method="GET" action="" >
-        <p>Origin: </p><input type="search" name="origin"> 
-        <p>Desitnation: </p><input type="search" name="destination"> 
-        <p>Date Minimum: </p><input type="date" name="date_min"> 
-        <p>Date Maximum: </p><input type="date" name="date_max"> 
-        <br><br>
-        <button type="submit"> Search </button>
-    </form>
-    {% for result in results %}
-        <p> {{result}}</p>
-        <p> Leaving: {{result.departure}}</p>
-        <p> Arriving: {{result.arrival}}</p>
-        <p> Cost: {{result.flight_cost}}</p>
+    <h4 class="mb-3 fw-semibold">Search Flights</h4>
+    <form method="GET" action="" class="flight-search-bar shadow-sm rounded-4 p-4 mb-4 bg-white">
+        <div class="row g-3 align-items-end">
 
-        {% if user.is_authenticated %}
-            <form method="POST" action="" >
-                {% csrf_token %}
-                <input type="hidden" name="flight" value={{result.flight_num}}>
-                <label>Book to:</label>
-                <select name="booking">
-                    {% for booking in pending_bookings %}
-                        <option value ={{booking.booking_id}}>{{booking}}</option>
-                    {% endfor %}
-                </select>
-                {% if pending_bookings %}
-                {% else %}
-                <p> No current pending bookings</p>
-                {% endif %}
-                <button type="submit"> Book </button>
-            </form>
-        {% endif %}
-    {% empty %}
-        {% if searched %}
-            <p>nothing sad face</p>
-        {% endif %}
+            <div class="col-md-3">
+                <label class="form-label fw-semibold">Origin</label>
+                <input type="search" name="origin" class="form-control" placeholder="From ...">
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label fw-semibold">Destination</label>
+                <input type="search" name="destination" class="form-control" placeholder="To ...">
+            </div>
+
+            <div class="col-md-2">
+                <label class="form-label fw-semibold">Date Min</label>
+                <input type="date" name="date_min" class="form-control">
+            </div>
+
+            <div class="col-md-2">
+                <label class="form-label fw-semibold">Date Max</label>
+                <input type="date" name="date_max" class="form-control">
+            </div>
+
+            <div class="col-md-2 d-grid">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    Search Flights
+                </button>
+            </div>
+
+        </div>
+    </form>
+
+    <h4 class="mb-3 fw-semibold">Search Results</h4>
+    
+    {% for result in results %}
+        <div class="flight-card card shadow-sm rounded-4 p-4 mb-4">
+
+            <div class="row align-items-center">
+
+                <div class="col-md-8">
+                    <h4 class="fw-semibold mb-1">
+                        {{ result.route.origin.city_name }} → {{ result.route.destination.city_name }}
+                    </h4>
+
+                    <p class="text-muted mb-1">
+                        <strong>Departure:</strong> {{ result.departure }}
+                    </p>
+
+                    <p class="text-muted mb-3">
+                        <strong>Arrival:</strong> {{ result.arrival }}
+                    </p>
+
+                    <p class="fw-semibold fs-5 text-primary mb-0">
+                        ₱{{ result.flight_cost }}
+                    </p>
+                </div>
+
+                <div class="col-md-4 text-md-end text-center mt-3 mt-md-0">
+
+                    {% if user.is_authenticated %}
+                        <form method="POST" action="">
+                            {% csrf_token %}
+                            <input type="hidden" name="flight" value="{{ result.flight_num }}">
+
+                            <label class="form-label text-muted">Book to:</label>
+                            <select name="booking" class="form-select mb-3">
+                                {% for booking in pending_bookings %}
+                                    <option value="{{ booking.booking_id }}">{{ booking }}</option>
+                                {% endfor %}
+                            </select>
+
+                            {% if pending_bookings %}
+                                <button type="submit" class="btn btn-primary">
+                                    Add to Booking
+                                </button>
+                            {% else %}
+                                <p class="text-muted">No pending bookings</p>
+                            {% endif %}
+                        </form>
+
+                    {% else %}
+                        <a href="/profile/login/" class="btn btn-outline-primary btn-lg">
+                            Login to Book
+                        </a>
+                    {% endif %}
+
+                </div>
+
+            </div>
+        </div>
+
     {% endfor %}
 
 {% endblock %}
